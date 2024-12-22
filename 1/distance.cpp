@@ -17,15 +17,14 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    std::vector<int> v;
-    int n;
-    while (file >> n)
-        v.push_back(n);
-    file.close();
-
     std::vector<int> v1, v2;
-    for (int i = 0; i < v.size(); i++)
-        (i % 2 == 0 ? v1 : v2).push_back(v[i]);
+    int a, b;
+    while (file >> a >> b)
+    {
+        v1.push_back(a);
+        v2.push_back(b);
+    }
+    file.close();
 
     std::sort(v1.begin(), v1.end());
     std::sort(v2.begin(), v2.end());
