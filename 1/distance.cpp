@@ -1,53 +1,48 @@
-#include <cstddef>
+#include <algorithm>
 #include <fstream>
 #include <iostream>
-#include <numeric>
-
-void bubbleSort(std::vector<int> &v)
-{
-    int n = v.size();
-    for (int i = 0; i < n - 1; i++)
-        for (int j = 0; j < n - i - 1; j++)
-            if (v[j] > v[j + 1])
-                std::swap(v[j], v[j + 1]);
-}
 
 int main(int argc, char *argv[])
 {
-    if (argv[1] == NULL)
+    if (argc < 2)
     {
-        std::cout << "Provide path to file\n";
-        return 0;
+        std::cerr << "Provide path to file" << std::endl;
+        return 1;
     }
+
     std::ifstream file(argv[1]);
+    if (!file.is_open())
+    {
+        std::cerr << "Can' open file" << std::endl;
+        return 1;
+    }
+
     std::vector<int> v;
-    int number;
+    int n;
+    while (file >> n)
+        v.push_back(n);
+    file.close();
 
-    if (file.is_open())
-    {
-        while (file >> number)
-            v.push_back(number);
-        file.close();
-    }
-    else
-        std::cout << "Can' open file" << std::endl;
+    std::vector<int> v1, v2;
+    for (int i = 0; i < v.size(); i++)
+        (i % 2 == 0 ? v1 : v2).push_back(v[i]);
 
-    std::vector<int> v1;
-    std::vector<int> v2;
+    std::sort(v1.begin(), v1.end());
+    std::sort(v2.begin(), v2.end());
 
-    for (size_t i = 0; i < (v.size() - 1); i += 2)
-    {
-        v1.push_back(v[i]);
-        v2.push_back(v[i + 1]);
-    }
-
-    bubbleSort(v1);
-    bubbleSort(v2);
-
-    std::vector<int> v3;
+    int distance = 0;
     for (int i = 0; i < v1.size(); i++)
-        v3.push_back(abs(v1[i] - v2[i]));
+        distance += abs(v1[i] - v2[i]);
+    std::cout << "Distance is: " << distance << "\n";
 
-    int result = std::reduce(v3.begin(), v3.end());
-    std::cout << result << std::endl;
+    std::unordered_map<int, int> freq;
+    for (int n : v2)
+        freq[n]++;
+
+    int score = 0;
+    for (int n : v1)
+        score += freq[n] * n;
+    std::cout << "Similarity score is: " << score << "\n";
+
+    return 0;
 }
