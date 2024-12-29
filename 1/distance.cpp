@@ -1,6 +1,8 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <unordered_map>
+#include <vector>
 
 int main(int argc, char *argv[])
 {
